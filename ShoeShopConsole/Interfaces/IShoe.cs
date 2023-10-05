@@ -7,7 +7,7 @@ namespace ShoeShopConsole.Interfaces
 {
     internal interface IShoe
     {
-        uint Id { get; }
+        uint Id { get; set; }
         string Name { get; }
         string Brand { get; }
         decimal Price { get; }

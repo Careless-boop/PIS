@@ -19,15 +19,11 @@ namespace ShoeShopConsole.Classes.Shoes
         Mid,
         High
     }
-    internal class Sneackers : IShoe
+    internal class Sneackers : Shoe
     {
-        uint _id;
-        string _name;
-        string _brand;
-        decimal _price;
         ClosureType _closure;
         HeightType _height;
-        public uint Id
+        public override uint Id
         {
             get { return _id; }
             set
@@ -36,40 +32,23 @@ namespace ShoeShopConsole.Classes.Shoes
                 _id = uint.Parse(id);
             }
         }
-        public string Name { get { return _name; } }
-        public string Brand { get { return _brand; } }
-        public decimal Price { get { return _price; } }
         public ClosureType Closure { get { return _closure; } }
         public HeightType Height { get { return _height; } }
 
-        public Sneackers(uint id, string name, string brand, decimal price, ClosureType closure, HeightType height)
+        public Sneackers(uint id, string name, string brand, decimal price, ClosureType closure, HeightType height):base(name, brand, price)
         {
             Id = id;
-            _name = name;
-            _brand = brand;
-            _price = price;
             _closure = closure;
             _height = height;
         }
 
-        public void Show()
+        public override void Show()
         {
             Console.WriteLine($"Sneackers -\nBrand:{_brand}\nName:{Name}\nClosure Type:{_closure}\nHeight:{_height}\nPrice:{Price}");
         }
-        public string ToString()
+        public override string ToString()
         {
             return $"Sneackers -\nBrand:{_brand}\nName:{Name}\nClosure Type:{_closure}\nHeight:{_height}\nPrice:{Price}";
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is IShoe other)
-            {
-                if (Id == other.Id && Brand == other.Brand && Name == other.Name)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }
