@@ -24,6 +24,12 @@ namespace ShoeShopConsole
                         case 0:
                             ShoeManager.ShowAvailable(user);
                             break;
+                        case 1:
+                            UserManager.ShowFavorites(user);
+                            break;
+                        case 2:
+                            UserManager.ShowCart(user);
+                            break;
                         case 3:
                             break;
                         default: 
