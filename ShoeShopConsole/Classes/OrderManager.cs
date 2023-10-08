@@ -10,7 +10,7 @@ namespace ShoeShopConsole.Classes
     {
         public static void ShowOrder(IUser user)
         {
-            Order order = new Order(user.Cart.Shoes);
+            IOrder order = new Order(user.Cart.Shoes);
             Console.Clear();
             Console.WriteLine("Your order:");
             foreach (IShoe shoe in order.OrderItems)

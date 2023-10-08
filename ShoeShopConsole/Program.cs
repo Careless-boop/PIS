@@ -37,8 +37,6 @@ namespace ShoeShopConsole
                             break;
                         case 4:
                             break;
-                        default: 
-                            break;
                     }
                 }
                 Console.Clear();

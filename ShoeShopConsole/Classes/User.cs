@@ -7,8 +7,8 @@ namespace ShoeShopConsole.Classes
 {
     internal class User : IUser
     {
-        Cart _cart;
-        Favorites _favorites;
+        IInventory _cart;
+        IInventory _favorites;
 
         public IInventory Cart
         {
