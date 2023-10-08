@@ -25,11 +25,5 @@ namespace ShoeShopConsole.Classes
             _cart = new Cart();
             _favorites = new Favorites();
         }
-
-        public void PurchaseCart()
-        {
-            Order order = new Order(_cart.Shoes);
-            order.PlaceOrder();
-        }
     }
 }

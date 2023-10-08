@@ -9,6 +9,6 @@ namespace ShoeShopConsole.Interfaces
         List<IShoe> OrderItems { get; }
         decimal TotalPrice { get; }
 
-        void PlaceOrder();
+        void PlaceOrder(IUser user);
     }
 }

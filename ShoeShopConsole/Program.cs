@@ -10,14 +10,15 @@ namespace ShoeShopConsole
         {
             IUser user = new User();
             uint select=0;
-            while (select!=3)
+            while (select!=4)
             {
                 Console.WriteLine("Select option:\n" +
                                   "0.See available shoes.\n" +
                                   "1.See favorites.\n" +
                                   "2.See cart.\n" +
-                                  "3.Exit!");
-                if(uint.TryParse(Console.ReadKey(intercept: true).KeyChar.ToString(),out select)&&select<4)
+                                  (user.Cart.Shoes.Count>0 ?"3.Purchase cart\n" :string.Empty)+
+                                  "4.Exit!");
+                if(uint.TryParse(Console.ReadKey(intercept: true).KeyChar.ToString(),out select)&&select<5)
                 {
                     switch(select)
                     {
@@ -31,6 +32,10 @@ namespace ShoeShopConsole
                             UserManager.ShowCart(user);
                             break;
                         case 3:
+                            if (user.Cart.Shoes.Count > 0)
+                                OrderManager.ShowOrder(user);
+                            break;
+                        case 4:
                             break;
                         default: 
                             break;

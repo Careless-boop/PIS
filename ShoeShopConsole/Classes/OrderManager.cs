@@ -8,8 +8,10 @@ namespace ShoeShopConsole.Classes
 {
     internal class OrderManager
     {
-        public static void ShowOrder(Order order)
+        public static void ShowOrder(IUser user)
         {
+            Order order = new Order(user.Cart.Shoes);
+            Console.Clear();
             Console.WriteLine("Your order:");
             foreach (IShoe shoe in order.OrderItems)
             {
@@ -17,24 +19,15 @@ namespace ShoeShopConsole.Classes
                 Console.WriteLine("=================================");
             }
             Console.WriteLine($"Total: {order.TotalPrice}");
-        }
-        public static void ToFile(Order order)
-        {
-            StreamWriter sw = new StreamWriter("Order.txt", false, System.Text.Encoding.Default);
-            try
+            bool agree = Agreement();
+            if (agree)
             {
-                foreach (IShoe shoe in order.OrderItems)
-                {
-                    sw.WriteLine(shoe.ToString());
-                    sw.WriteLine("=================================");
-                }
-                sw.WriteLine($"Total: {order.TotalPrice}");
+                order.PlaceOrder(user);
             }
-            catch (IOException ex)
+            else
             {
-                Console.WriteLine(ex.Message);
+                return;
             }
-            finally { sw.Close(); }
         }
         public static bool Agreement()
         {
@@ -46,7 +39,6 @@ namespace ShoeShopConsole.Classes
                 {
                     return select==0?true:false;
                 }
-                Console.Write("Invalid input.Try again!\n0. Yes\n1. No");
             }
         }
 

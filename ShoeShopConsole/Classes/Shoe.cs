@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShoeShopConsole.Classes.Shoes
+namespace ShoeShopConsole.Classes
 {
     internal abstract class Shoe : IShoe
     {

@@ -17,14 +17,35 @@ namespace ShoeShopConsole.Classes
         {
             _orderShoes = orderItems;
         }
-        public void PlaceOrder()
+        public void PlaceOrder(IUser user)
         {
-            OrderManager.ShowOrder(this);
-            if (OrderManager.Agreement())
+            ToFile();
+            user.Cart.RemoveAll();
+            
+        }
+        void ToFile()
+        {
+            StreamWriter sw = new StreamWriter("Order.txt", false, System.Text.Encoding.Default);
+            try
             {
-
+                foreach (IShoe shoe in _orderShoes)
+                {
+                    sw.WriteLine(shoe.ToString());
+                    sw.WriteLine("=================================");
+                }
+                sw.WriteLine($"Total: {TotalPrice}");
+                Console.WriteLine("Order file created!");
             }
-
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally 
+            { 
+                sw.Close();
+                Console.Write("Press any button to continue...");
+                Console.ReadKey();
+            }
         }
         private decimal CalculateTotalPrice()
         {

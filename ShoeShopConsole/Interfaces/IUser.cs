@@ -8,7 +8,5 @@ namespace ShoeShopConsole.Interfaces
     {
         IInventory Cart { get; }
         IInventory Favorites { get; }
-
-        void PurchaseCart();
     }
 }

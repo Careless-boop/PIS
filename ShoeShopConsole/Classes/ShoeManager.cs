@@ -9,87 +9,85 @@ namespace ShoeShopConsole.Classes
 {
     internal class ShoeManager
     {
+        public delegate void ManagingChosen(IUser user, IShoe shoe);
         public static void ShowAvailable(IUser user)
         {
-            List<IShoe>[] shoes = ManagePages();
+            DBService dbService = new DBService();
+            List<IShoe> temp = dbService.GetShoes();
+
+            List<IShoe>[] shoes = ManagePages(temp);
             int select = 1;
             int page = 0;
             while (select!=0)
             {
-                int iterator = 1;
                 Console.Clear();
                 Console.WriteLine("\u001b[2J\u001b[3J");
-                if (page == 0 && shoes.Length == 1)
-                {
-                    Console.WriteLine($"Available shoes:\n0.Return");
-                    foreach (IShoe shoe in shoes[page])
-                    {
-                        Console.Write(iterator + "." + shoes[page].IndexOf(shoe) + ".");
-                        shoe.Show();
-                        Console.WriteLine("===========================");
-                        iterator++;
-                    }
-                    select = ChooseShown(user, shoes[page]);
-                }
-                else if(page==0&&shoes.Length > 1)
-                {
-                    Console.WriteLine($"Available shoes (page:{page}):\n0.Return 5.Next page->");
-                    foreach (IShoe shoe in shoes[page])
-                    {
-                        Console.Write(iterator + "." + shoes[page].IndexOf(shoe) + ".");
-                        shoe.Show();
-                        Console.WriteLine("===========================");
-                        iterator++;
-                    }
-                    select = ChooseShown(user, shoes[page]);
-                    if (select == 5)
-                    {
-                        page++;
-                    }
-                }
-                else if(page>0&&page+1!=shoes.Length)
-                {
-                    Console.WriteLine($"Available shoes (page:{page}):\n0.Return 5.Prev page<- 6.Next page->");
-                    foreach (IShoe shoe in shoes[page])
-                    {
-                        Console.Write(iterator + "." + shoes[page].IndexOf(shoe) + ".");
-                        shoe.Show();
-                        Console.WriteLine("===========================");
-                        iterator++;
-                    }
-                    select = ChooseShown(user, shoes[page]);
-                    if(select== 5)
-                    {
-                        page--;
-                    }
-                    else if (select == 6)
-                    {
-                        page++;
-                    }
-                }
-                else if (page > 0 && page+1 == shoes.Length)
-                {
-                    Console.WriteLine($"Available shoes (page:{page}):\n0.Return 5.Prev page<-");
-                    foreach (IShoe shoe in shoes[page])
-                    {
-                        Console.Write(iterator + "." + shoes[page].IndexOf(shoe) + ".");
-                        shoe.Show();
-                        Console.WriteLine("===========================");
-                        iterator++;
-                    }
-                    select = ChooseShown(user, shoes[page]);
-                    if (select == 5)
-                    {
-                        page--;
-                    }
-                }
+                Console.Write("Available shoes");
+                select = ShowPages(user, shoes, ref page,Shoe_ManageChosen);
             }
         }
-        static List<IShoe>[] ManagePages()
+        public static int ShowPages(IUser user, List<IShoe>[] shoes,ref int page, ManagingChosen manageChosen)
         {
-            DBService dbService = new DBService();
-            List<IShoe> temp = dbService.GetShoes();
-            int pgcount = (temp.Count / 4) + 1;
+            int select = 0;
+            if (page+1>shoes.Length)
+            {
+                page--;
+            }
+            
+            if (page == 0 && shoes.Length == 1)
+            {
+                Console.WriteLine("\n0.Return");
+                ShowPage(shoes[page]);
+                select = ChooseShown(user, shoes[page], manageChosen);
+            }
+            else if (page == 0 && shoes.Length > 1)
+            {
+                Console.WriteLine($" (page:{page}):\n0.Return 5.Next page->");
+                ShowPage(shoes[page]);
+                select = ChooseShown(user, shoes[page], manageChosen);
+                if (select == 5)
+                {
+                    page++;
+                }
+            }
+            else if (page > 0 && page + 1 != shoes.Length)
+            {
+                Console.WriteLine($" (page:{page}):\n0.Return 5.Prev page<- 6.Next page->");
+                ShowPage(shoes[page]);
+                select = ChooseShown(user, shoes[page], manageChosen);
+                if (select == 5)
+                {
+                    page--;
+                }
+                else if (select == 6)
+                {
+                    page++;
+                }
+            }
+            else if (page > 0 && page + 1 == shoes.Length)
+            {
+                Console.WriteLine($" (page:{page}):\n0.Return 5.Prev page<-");
+                ShowPage(shoes[page]);
+                select = ChooseShown(user, shoes[page], manageChosen);
+                if (select == 5)
+                {
+                    page--;
+                }
+            }
+            return select;
+        }
+        static void ShowPage(List<IShoe> shoePage)
+        {
+            foreach (IShoe shoe in shoePage)
+            {
+                Console.Write(shoePage.IndexOf(shoe) + 1 + ".");
+                shoe.Show();
+                Console.WriteLine("===========================");
+            }
+        }
+        public static List<IShoe>[] ManagePages(List<IShoe> temp)
+        {
+            int pgcount = temp.Count % 4 == 0 ? temp.Count / 4 : (temp.Count / 4) + 1;
             List<IShoe>[] pages = new List<IShoe>[pgcount];
             if (pgcount > 0) pages[0] = new List<IShoe>();
             int i = 0;
@@ -107,7 +105,7 @@ namespace ShoeShopConsole.Classes
             }
             return pages;
         }
-        static int ChooseShown(IUser user,List<IShoe> shoes)
+        static int ChooseShown(IUser user,List<IShoe> shoes, ManagingChosen managingChosen)
         {
             uint choose;
             while (true)
@@ -120,7 +118,7 @@ namespace ShoeShopConsole.Classes
                     }
                     else
                     {
-                        ManageChosen(user, shoes.ElementAt((int)choose - 1));
+                        managingChosen(user, shoes.ElementAt((int)choose - 1));
                         return 1;
                     }
                 }
@@ -132,7 +130,7 @@ namespace ShoeShopConsole.Classes
                 Console.WriteLine("\u001b[2J\u001b[3J");
             }
         }
-        static void ManageChosen(IUser user,IShoe shoe)
+        static void Shoe_ManageChosen(IUser user,IShoe shoe)
         {
             uint select;
             while (true)
