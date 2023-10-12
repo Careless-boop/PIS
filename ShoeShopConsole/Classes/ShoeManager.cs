@@ -114,6 +114,8 @@ namespace ShoeShopConsole.Classes
                 {
                     if (choose == 0)
                     {
+                        Console.Clear();
+                        Console.WriteLine("\u001b[2J\u001b[3J");
                         return 0;
                     }
                     else
@@ -126,8 +128,7 @@ namespace ShoeShopConsole.Classes
                 {
                     return (int)choose;
                 }
-                Console.Clear();
-                Console.WriteLine("\u001b[2J\u001b[3J");
+                
             }
         }
         static void Shoe_ManageChosen(IUser user,IShoe shoe)
